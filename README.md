@@ -13,4 +13,4 @@ OccupancyModel.jl contains the Julia code to fit simulated data to MacKenzie et 
 
 ![Local functions](https://github.com/jmrmcode/Occupancy-model-using-Turing/blob/main/Psi_prob_estimates.png?raw=true)
 
-**Fig 1**. Running average plots for *p* and &Psi; (left). Joint distribution (right).
+**Fig 1**. Running average plots for *p* and &Psi; (left). Joint density (right).
