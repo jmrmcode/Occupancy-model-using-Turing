@@ -24,7 +24,7 @@ end
 
 # occupancy model declaration
 @model occupancy(data, z) = begin
-    # priors
+    # weakly informative priors
     ψ ~ Beta(2, 2)
     p ~ Beta(2, 2)
     # likelihood
