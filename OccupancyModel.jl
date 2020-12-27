@@ -47,7 +47,7 @@ plot(chains)
 # running average plots
 mp = meanplot(chains::Chains)
 
-# plot joint posterior distribution
+# plot joint density
 post_ψ = chains[:ψ][:, 1]
 post_p = chains[:p][:, 1]
 jp = marginalkde(post_p, post_ψ)
