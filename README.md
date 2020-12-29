@@ -9,10 +9,13 @@ Y<sub>ij</sub>|*Z*<sub>i</sub> ~ Bernoulli(*Z*<sub>i</sub> * *p*)    for *j* = 1
 
 Note that Eq[1] describes the latent occupancy state variable and Eq[2] is the joint distribution of the observations conditional on the latent occupancy state. 
 ## What does it do
-OccupancyModel.jl contains the Julia code to fit simulated data to MacKenzie et al's (2002) model. The parameters &Psi; and *p* are estimated using the No-U-Turn sampler, an extension to Hamiltonian Monte Carlo that is implemented in the Turing package.
+-- OccupancyModel.jl contains the Julia code to fit simulated data to MacKenzie et al's (2002) model. The parameters &Psi; and *p* are estimated using the No-U-Turn sampler, an extension to Hamiltonian Monte Carlo that is implemented in the Turing package.
 
 ![Local functions](https://github.com/jmrmcode/Occupancy-model-using-Turing/blob/main/Psi_prob_estimates.png?raw=true)
 
 **Fig 1**. Running average plots for *p* and &Psi; (left). Joint density (right).
 
-OccupancyModelCovariates.jl contains the code to fit MacKenzie et al's (2002) model but including covariates for the latent occupancy (&Psi;) and detection probability (*p*). 
+-- OccupancyModelCovariates.jl contains the code to fit MacKenzie et al's (2002) model, but including covariates for the latent occupancy (&Psi;) and detection probability (*p*). An intercept and continuous predictor for both the latent and observed process are fitted.
+
+<img src="https://github.com/jmrmcode/Occupancy-model-using-Turing/blob/main/covariatesModelPosteriors.png?raw=true" width="400" height="400">
+**Fig 2**. Trace (left) and density (right) plots for the parameters.
