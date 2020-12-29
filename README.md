@@ -18,4 +18,5 @@ Note that Eq[1] describes the latent occupancy state variable and Eq[2] is the j
 -- OccupancyModelCovariates.jl contains the code to fit MacKenzie et al's (2002) model, but including covariates for the latent occupancy (&Psi;) and detection probability (*p*). An intercept and continuous predictor for both the latent and observed process are fitted.
 
 <img src="https://github.com/jmrmcode/Occupancy-model-using-Turing/blob/main/covariatesModelPosteriors.png?raw=true" width="400" height="400">
+
 **Fig 2**. Trace (left) and density (right) plots for the parameters.
