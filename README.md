@@ -14,3 +14,5 @@ OccupancyModel.jl contains the Julia code to fit simulated data to MacKenzie et 
 ![Local functions](https://github.com/jmrmcode/Occupancy-model-using-Turing/blob/main/Psi_prob_estimates.png?raw=true)
 
 **Fig 1**. Running average plots for *p* and &Psi; (left). Joint density (right).
+
+OccupancyModelCovariates.jl contains the code to fit MacKenzie et al's (2002) model but including covariates for the latent occupancy (&Psi;) and detection probability (*p*). 
