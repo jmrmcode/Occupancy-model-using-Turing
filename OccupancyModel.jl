@@ -5,7 +5,7 @@ using Random
 # simulate the data
 Random.seed!(24)
 S = 50  # number of sites
-J = 2 # number of surveys in each site
+J = 2 # number of surveys at each site
 data = Array{Real}(undef, S, J)
 
 # true parameters
