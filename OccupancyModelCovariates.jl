@@ -6,7 +6,7 @@ using Random
 ## simulate the data
 Random.seed!(2345)
 S = 100  # number of sites
-J = 2 # number of surveys in each site
+J = 2 # number of surveys at each site
 data = Array{Real}(undef, S, J) # declare data structure
 
 ## linear predictor for occupancy (ψ)
