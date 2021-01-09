@@ -3,42 +3,40 @@ using MCMCChains, StatsPlots
 using Random
 
 # simulate the data
-Random.seed!(24)
-S = 50  # number of sites
-J = 2 # number of surveys at each site
-data = Array{Real}(undef, S, J)
+Random.seed!(12)
+S = 150  # number of sites
+J = 2 # number of surveys in each site
+detectionHistory = Array{Real}(undef, S * J)
 
 # true parameters
 ψ = 0.8 # probability of presence (occupancy)
-p = 0.3 # probability of detection
+p = 0.5 # probability of detection
 
 # occupancy data
 z = rand(Bernoulli(ψ), S)
-
+z_duplicated = [z z]
 # populate observed surveys data (detections)
-for s in 1:S
-    for j in 1:J
-    data[s, j] = rand(Bernoulli(z[s]*p), 1)[1]
-    end
+for s in 1:(S*J)
+    detectionHistory[s] = rand(Bernoulli(z_duplicated[s]*p), 1)[1]
 end
 
 # occupancy model declaration
-@model occupancy(data, z) = begin
-    # weakly informative priors
-    ψ ~ Beta(2, 2)
-    p ~ Beta(2, 2)
+@model occupancy(d, occ1, occ2) = begin
+    # priors
+    ψ ~ Beta(1, 1)
+    p ~ Beta(1, 1)
     # likelihood
-    for s in S
-        z[s] ~ Bernoulli(ψ)
-        for j in J
-            data[s, j] ~ Bernoulli(z[s]*p)
-            return ψ, p
-            end
-        end
+    S = length(occ1)
+    for i in 1:S
+        occ1[i] ~ Bernoulli(ψ)
     end
+    for j in 1:length(occ2)
+        d[j] ~ Bernoulli(occ2[j] * p)
+    end
+end
 
 # Start the No-U-Turn Sampler (NUTS)
-chains = mapreduce(c -> sample(occupancy(data, z), NUTS(0.65), 1000), chainscat, 1:3)
+chains = mapreduce(c -> sample(occupancy(detectionHistory, z, z_duplicated), NUTS(1000, .95), 1000, drop_warmup = false), chainscat, 1:3)
 display(chains)
 
 # trace plots and posteriors
