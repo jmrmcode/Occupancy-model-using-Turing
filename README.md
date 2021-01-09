@@ -11,7 +11,7 @@ Note that Eq[1] describes the latent occupancy state variable and Eq[2] is the j
 ## What does it do
 -- OccupancyModel.jl contains the Julia code to fit simulated data to MacKenzie et al's (2002) model. The parameters &Psi; and *p* are estimated using the No-U-Turn sampler, an extension to Hamiltonian Monte Carlo that is implemented in the Turing package.
 
-![Local functions](https://github.com/jmrmcode/Occupancy-model-using-Turing/blob/main/Psi_prob_estimates.png?raw=true)
+![Local functions](https://github.com/jmrmcode/Occupancy-model-using-Turing/blob/main/psi_probab_estimates.png?raw=true)
 
 **Fig 1**. Running average plots for *p* and &Psi; (left). Joint density (right).
 
