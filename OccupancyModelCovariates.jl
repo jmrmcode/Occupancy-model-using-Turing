@@ -4,14 +4,15 @@ using MCMCChains, StatsPlots
 using Random
 
 ## simulate the data
-Random.seed!(2345)
+Random.seed!(12)
 S = 100  # number of sites
-J = 2 # number of surveys at each site
-data = Array{Real}(undef, S, J) # declare data structure
+J = 5 # number of surveys in each site
+detectionHistory = Array{Real}(undef, S * J)
 
 ## linear predictor for occupancy (ψ)
 # continuous predictor
 x1 = rand(Normal(0, 1), S)
+x1_elongated = repeat(x1, J)
 # matrix X1
 X1 = Array{Float64}(undef, S, 2)
 # populate matrix X1
@@ -19,7 +20,7 @@ for i in 1:S
         X1[i, :] = vcat(1, x1[i])
     end
 # coeffcients vector (model parameters)
-β1 = vcat(0, 3)
+β1 = vcat(1, 3)
 # probability of presence (occupancy)
 ψ = logistic.(X1 * β1)
 
@@ -28,9 +29,13 @@ z = Array{Bool}(undef, S, 1)
 for i in 1:S
     z[i] = rand(Bernoulli(ψ[i]), i)[1]
 end
+
+z_elongated = repeat(z, J) # elongate z
+
 ## linear predictor for detection (p)
 # continuous predictor
-x2 = rand(Normal(0, 0.5), S)
+x2 = rand(Normal(0, 1), S)
+x2_elongated = repeat(x2, J)
 # matrix X2
 X2 = Array{Float64}(undef, S, 2)
 # populate matrix X2
@@ -38,38 +43,36 @@ for i in 1:S
         X2[i, :] = vcat(1, x2[i])
     end
 # coeffcients vector (model parameters)
-β2 = vcat(0, -4)
+β2 = vcat(1, -3)
 # probability of presence (occupancy)
 p = logistic.(X2 * β2)
-
+p_elongated = repeat(p, J)
 # populate observed surveys data (detection history)
-for s in 1:S
-    for j in 1:J
-    data[s, j] = rand(Bernoulli(z[s]*p[s]), 1)[1]
-    end
+for s in 1:(S*J)
+    detectionHistory[s] = rand(Bernoulli(z_elongated[s] * p_elongated[s]), 1)[1]
 end
 
+
 # occupancy model declaration
-@model occupancy(S, J, data, z, x1, x2, σ1, σ2) = begin
+@model occupancy(occ1, occu2, detectionHist, x1, x2) = begin
     # priors
-    intercept1 ~ Normal(0, 1)
-    intercept2 ~ Normal(0, 1)
-    β1 ~ Normal(0, σ1)
-    β2 ~ Normal(0, σ2)
+    intercept1 ~ Normal(0, 10)
+    intercept2 ~ Normal(0, 10)
+    β1 ~ Normal(0, 10)
+    β2 ~ Normal(0, 10)
     # likelihood
-    for s in S
-        ψ = logistic(intercept1 + β1*x1[s])
-        z[s] ~ Bernoulli(ψ)
-        for j in J
-        p = logistic(intercept2 + β2*x2[s])
-            data[s, j] ~ Bernoulli(z[s]*p)
-            return intercept1, intercept2, β1, β2
+    for i in 1:length(occ1)
+        ψ = logistic(intercept1 + β1 * x1[i])
+        occ1[i] ~ Bernoulli(ψ)
+    end
+        for j in 1:length(occu2)
+        p = logistic(intercept2 + β2 * x2[j])
+            detectionHist[j] ~ Bernoulli(occu2[j] * p)
             end
-        end
     end
 
 # Start the No-U-Turn Sampler (NUTS)
-chains = mapreduce(c -> sample(occupancy(S, J, data, z, x1, x2, 4, 7), NUTS(0.65), 1000), chainscat, 1:3)
+chains = mapreduce(c -> sample(occupancy(z, z_elongated, detectionHistory, x1_elongated, x2_elongated), NUTS(0.95), 1000), chainscat, 1:3)
 # summary
 display(chains)
 # plot parameters
